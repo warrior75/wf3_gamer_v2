@@ -1,4 +1,10 @@
+<?php 
+    session_start();
+    require_once(__DIR__.'/config/db.php');
 
+
+
+ ?>
 
 <!doctype html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
@@ -33,6 +39,13 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container" id="header">
+         <?php if (isset($_SESSION['loginErrors']['login'])) :?>
+            <div class="alert alert-info" >
+                <?php echo $_SESSION['loginErrors']['login']; ?>
+                <?php unset($_SESSION['loginErrors']['login']); ?>
+            </div>
+        <?php endif; ?>
+       
 
         <div id="imgLogo">
           <img src="img/logo.png">  

@@ -21,7 +21,6 @@ $tel = trim(htmlentities($_POST['tel']));
 $address = trim(htmlentities($_POST['address']));
 
 
-
 // Initalisation d'un tableau d'erreurs
 $errors = [];
 
@@ -92,7 +91,8 @@ $errors = [];
       if( empty($errors)){
 
            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-           $query = $pdo->prepare('INSERT INTO gamers(email,password,firstname,lastname,adresse,zipcode,town,phone,created_at,role) VALUES(:email,:password,:firstname,:lastname,:adresse,:zipcode,:town,:phone,NOW(),"member")');
+           $query = $pdo->prepare('INSERT INTO gamers(email,password,firstname,lastname,adresse,zipcode,town,phone,created_at,role) 
+                                   VALUES(:email,:password,:firstname,:lastname,:adresse,:zipcode,:town,:phone,NOW(),"member")');
            $query->bindValue(':email',$email,PDO::PARAM_STR);
            $query->bindValue(':password',$hashedPassword,PDO::PARAM_STR);
            $query->bindValue(':firstname',$firstname,PDO::PARAM_STR);
@@ -117,7 +117,7 @@ $errors = [];
 
                 // On stocke le user en session et on retire le password avant 
                 unset($resultUser['password']);
-                $_SESSION['user'] = $resultUser;
+                $_SESSION['gamers'] = $resultUser;
 
                 // On redirige l'utilisateur vers la page protégé profile.php
                 header("Location: catalogue.php");
@@ -125,14 +125,8 @@ $errors = [];
               }
    
       }
-
-
 print_r($errors);
 }
-    
-
-
-
 ?>
 
 
@@ -165,7 +159,8 @@ print_r($errors);
     </head>
     <body>
         <!--[if lt IE 8]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. 
+            Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
 

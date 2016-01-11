@@ -8,17 +8,29 @@ if (isset($_POST['action'])) {
 	$email = trim(htmlentities($_POST['email']));
 	$password = trim(htmlentities($_POST['password']));
 
+	echo "<pre>";
+	print_r($_POST['email']);
+	echo "</pre>";
+
+	echo "<pre>";
+	print_r($_POST['password']);
+	echo "</pre>";
+
 	// Initialisation d'un tableau d'erreurs
 	$errors = array();
 
 	// 1. récupération de l'utilisateur dans la bdd grâce à son email
 
-	$query = $pdo -> prepare('SELECT email,password FROM gamers WHERE email = :email');
-	$query -> bindValue('email',$email,PDO::PARAM_STR);
+	$query = $pdo -> prepare('SELECT * FROM gamers WHERE email = :email');
+	$query -> bindValue(':email',$email,PDO::PARAM_STR);
 	$query -> execute();
 	$userInfos = $query -> fetch();
 
-	if ($userInfos){
+	echo "<pre>";
+	print_r($userInfos);
+	echo "</pre>";
+
+	if ($userInfos) {
 		
 		//password_verify est compatible >= PHP 5.5
 		if (password_verify($password,$userInfos['password'])) {
@@ -28,26 +40,28 @@ if (isset($_POST['action'])) {
 			$_SESSION['gamers']=$userInfos;
 			header('Location: catalogue.php');
 			die();
+
 		}
 		else{
 			$errors['password']="Mot de passe invalide";
 		}
 	} else {
 		$errors['email']="Aucun utilisateur avec cet adresse mail";
-	}
+		}
 	
 	$_SESSION['loginErrors'] = $errors;
-	header("Location:connexion.php");
+	header("Location: connexion.php");
 	die();
 
 }
 
  ?>
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+		<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+		<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+		<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+		<!--[if gt IE 8]><!--> 
+	<html class="no-js" lang=""> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -69,7 +83,8 @@ if (isset($_POST['action'])) {
     </head>
     <body>
         <!--[if lt IE 8]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. 
+            Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
 
@@ -94,39 +109,39 @@ if (isset($_POST['action'])) {
     	
 
 	    	<form method="POST" action="#">
-			  <div class="form-group">
-			    <label for="exampleInputEmail1">Email</label>
-			    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
-			  </div>
-			  <?php if(isset($_SESSION['loginErrors'])): ?>
-				  <?php if(isset($_SESSION['loginErrors']['email'])) : ?> 
-	    			<span id="helpBlock2" class="help-block"> 
-	    				<?php echo ($_SESSION['loginErrors']['email']);?> 
-	    				<?php unset($_SESSION['loginErrors']['email']); ?> 
+				  <div class="form-group">
+				    <label for="email">Email</label>
+				    <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+				  </div>
+				  <?php if(isset($_SESSION['loginErrors'])): ?>
+					  <?php if(isset($_SESSION['loginErrors']['email'])) : ?> 
+		    			<span id="helpBlock2" class="help-block"> 
+		    				<?php echo $_SESSION['loginErrors']['email'];?> 
+		    				<?php unset($_SESSION['loginErrors']['email']); ?> 
+		    			</span>
+			    		<?php endif;?>
+			    		<?php unset($_SESSION['loginErrors']);?>
+	    		<?php endif; ?>
+				  <div class="form-group">
+				    <label for="password">Password</label>
+				    <input type="password" class="form-control" name="password" placeholder="Password">
+				  </div>
+
+
+				<?php if(isset($_SESSION['loginErrors'])): ?>
+	    		<?php if(isset($_SESSION['loginErrors']['password'])) : ?> 
+	    			<span id="helpBlock2" class="help-block">
+	    				<?php echo $_SESSION['loginErrors']['password'];?> 
+	    				<?php unset ($_SESSION['loginErrors']['password']); ?> 
 	    			</span>
-		    		<?php endif;?>
-		    		<?php unset($_SESSION['loginErrors']);?>
-    		<?php endif; ?>
-			  <div class="form-group">
-			    <label for="exampleInputPassword1">Password</label>
-			    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-			  </div>
-
-
-			<?php if(isset($_SESSION['loginErrors'])): ?>
-    		<?php if(isset($_SESSION['loginErrors']['password'])) : ?> 
-    			<span id="helpBlock2" class="help-block">
-    				<?php echo ($_SESSION['loginErrors']['password']);?> 
-    				<?php unset($_SESSION['loginErrors']['password']); ?> 
-    			</span>
-    		<?php endif;?>
-			  	<!-- il faut supprimer les erreurs une fois affichées sinon elles vont rester -->
-    		<?php		unset($_SESSION['loginErrors']);?>
-    		<?php endif; ?>
-			  <button type="submit" name="action" class="btn btn-primary">Valider</button>
-               <div class="form-group">
-                    <p class="help-block"><a href="forgotPassword.php">Mot de passe oublié?</a></p>
-                </div>
+	    		<?php endif;?>
+				  	<!-- il faut supprimer les erreurs une fois affichées sinon elles vont rester -->
+	    		<?php unset($_SESSION['loginErrors']);?>
+	    		<?php endif; ?>
+				  <button type="submit" name="action" class="btn btn-primary">Valider</button>
+	               <div class="form-group">
+	                    <p class="help-block"><a href="forgotPassword.php">Mot de passe oublié?</a></p>
+	                </div>
 			</form>
 			
 			<footer>
