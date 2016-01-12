@@ -1,6 +1,7 @@
 <?php 
 session_start(); 
 require(__DIR__.'/config/db.php'); 
+$nbJeux = 0;
 
 // Vérifier que le button submit a été cliqué
 
@@ -8,16 +9,10 @@ if (isset($_POST['action'])) {
 	$email = trim(htmlentities($_POST['email']));
 	$password = trim(htmlentities($_POST['password']));
 
-	echo "<pre>";
-	print_r($_POST['email']);
-	echo "</pre>";
 
-	echo "<pre>";
-	print_r($_POST['password']);
-	echo "</pre>";
 
 	// Initialisation d'un tableau d'erreurs
-	$errors = array();
+	$errors = [];
 
 	// 1. récupération de l'utilisateur dans la bdd grâce à son email
 
@@ -87,7 +82,38 @@ if (isset($_POST['action'])) {
             Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
+		<nav class="navbar navbar-inversed">
+		  <div class="container-fluid">
+		    <!-- Brand and toggle get grouped for better mobile display -->
+		    <div class="navbar-header">
+		      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		      </button>
+		      <a class="navbar-brand" href="index.php">GAMELOC</a>
+		    </div>
 
+		    <!-- Collect the nav links, forms, and other content for toggling -->
+		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		      <ul class="nav navbar-nav">
+		        <li class="active"><a href="inscription.php">Inscription</a></li>
+		        <li><a href="connexion.php">Connexion</a></li>
+		      </ul>
+		      <form class="navbar-form navbar-left" role="search">
+		        <div class="form-group">
+		          <input type="text" class="form-control" placeholder="Search">
+		        </div>
+		        <button type="submit" class="btn btn-primary">Chercher</button>
+		      </form>
+		      <ul class="nav navbar-nav navbar-right">
+		        <li><a href="#">Louer</a></li>
+				<li><a href="#" >Panier <i class="glyphicon glyphicon-shopping-cart" ></i> <?php echo $nbJeux; ?> </a></li>	          
+		      </ul>
+		    </div><!-- /.navbar-collapse -->
+		  </div><!-- /.container-fluid -->
+		</nav>
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container" id="header">
